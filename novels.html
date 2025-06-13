@@ -1,0 +1,120 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Novels</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active">My Works</a>
+                    <div class="dropdown-menu">
+                        <a href="novels.html" class="dropdown-item active">Novels</a>
+                        <a href="games.html" class="dropdown-item">Games</a>
+                        <a href="apps.html" class="dropdown-item">Apps</a>
+                    </div>
+                </li>
+                <li><a href="about.html" class="nav-link">More About Me</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Novels Section -->
+    <section id="novels">
+        <div class="novels-container">
+            <h1>My Novels</h1>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search novels by title...">
+                <button class="search-btn" onclick="filterNovels()">
+                    <img src="search-icon.png" alt="Search Icon" class="search-icon">
+                </button>
+            </div>
+            <div class="novels-list">
+                <!-- Novel Item 1 -->
+                <div class="novel-item" onclick="toggleExpand(this)">
+                    <div class="novel-summary">
+                        <img src="novel1-icon.jpg" alt="Novel 1 Icon" class="novel-icon">
+                        <h3>The Starlit Journey</h3>
+                        <a href="novel1.pdf" download class="download-btn" onclick="event.stopPropagation(); showDownloadAlert('The Starlit Journey')">Download</a>
+                    </div>
+                    <div class="novel-details">
+                        <img src="novel1-cover.jpg" alt="Novel 1 Cover" class="novel-detail-img">
+                        <p>A thrilling sci-fi adventure following a young explorer navigating a galaxy of mysteries. Join Elara as she uncovers ancient secrets and battles cosmic forces.</p>
+                    </div>
+                </div>
+                <!-- Novel Item 2 -->
+                <div class="novel-item" onclick="toggleExpand(this)">
+                    <div class="novel-summary">
+                        <img src="novel2-icon.jpg" alt="Novel 2 Icon" class="novel-icon">
+                        <h3>Whispers in the Forest</h3>
+                        <a href="novel2.pdf" download class="download-btn" onclick="event.stopPropagation(); showDownloadAlert('Whispers in the Forest')">Download</a>
+                    </div>
+                    <div class="novel-details">
+                        <img src="novel2-cover.jpg" alt="Novel 2 Cover" class="novel-detail-img">
+                        <p>A fantasy tale of a hidden realm where magic thrives. Follow Lyra, a young mage, as she discovers her destiny in an enchanted forest.</p>
+                    </div>
+                </div>
+                <!-- Novel Item 3 -->
+                <div class="novel-item" onclick="toggleExpand(this)">
+                    <div class="novel-summary">
+                        <img src="novel3-icon.jpg" alt="Novel 3 Icon" class="novel-icon">
+                        <h3>Echoes of Time</h3>
+                        <a href="novel3.pdf" download class="download-btn" onclick="event.stopPropagation(); showDownloadAlert('Echoes of Time')">Download</a>
+                    </div>
+                    <div class="novel-details">
+                        <img src="novel3-cover.jpg" alt="Novel 3 Cover" class="novel-detail-img">
+                        <p>A time-travel mystery where a detective unravels secrets across centuries. Will Clara solve the puzzle before time runs out?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
