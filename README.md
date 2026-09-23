@@ -1,0 +1,73 @@
+# Haolin Zhang — Creative Portfolio
+
+This repository contains the static personal portfolio for Haolin Zhang. It is built with plain HTML, CSS, and JavaScript so it can be hosted directly with GitHub Pages.
+
+## Local preview
+
+From the repository root, start a local server:
+
+```powershell
+python -m http.server 8000
+```
+
+Then open [http://localhost:8000](http://localhost:8000). A local server is recommended because the project loads the shared catalog from `data/projects.js` and mirrors how GitHub Pages serves the site.
+
+Stop the server with `Ctrl+C`.
+
+## Validation
+
+Run the dependency-free site validator before publishing:
+
+```powershell
+python scripts/validate_site.py
+node --check script.js
+node --check data/projects.js
+```
+
+The same checks run automatically in GitHub Actions for pushes and pull requests through `.github/workflows/validate.yml`.
+
+## Project structure
+
+```text
+.
+├── index.html                 Home page and featured projects
+├── works.html                 All projects with filters
+├── novels.html                Novel category page
+├── games.html                 Game category page
+├── apps.html                  App category page
+├── music.html                 Music category page
+├── project.html               Reusable project detail page
+├── about.html                 About page
+├── 404.html                   GitHub Pages not-found page
+├── styles.css                 Shared site styles
+├── script.js                  Shared behavior and rendering
+├── data/projects.js           Single source of truth for project metadata
+├── images/                    Profile and future project images
+├── downloads/                 Files visitors can download, grouped by type
+├── scripts/                   Local maintenance and validation scripts
+└── .github/workflows/         Automated repository checks
+```
+
+## Adding a project
+
+1. Add a new object to `data/projects.js`.
+2. Give it a unique `id`, title, type, category, genre, status, year, description, and details.
+3. Add a `download` object only when a real file exists under `downloads/`. Keep the path relative to the repository root.
+4. Set `featured: true` only for projects that should appear on the home page.
+5. Run the validation commands and check the project detail page locally.
+
+The available categories are `novels`, `games`, `apps`, `music`, and `other`. The category value determines which category page displays the project.
+
+## Downloads
+
+The files currently in `downloads/` are 0 KB examples for testing links and download behavior. Replace them with real files before presenting a project as released. Keep large files organized in the existing category folders and use descriptive filenames.
+
+## GitHub Pages
+
+To verify hosting for `SummerPea/SummerPea.github.io`:
+
+1. Open the repository’s **Settings → Pages**.
+2. Confirm the source is the `main` branch and the repository root (`/`) unless the hosting setup has intentionally changed.
+3. After publishing, visit the site root and test one category page, one project detail link, one download link, and a deliberately invalid URL to confirm `404.html` is shown.
+
+The repository does not require a build step. GitHub Pages can serve the committed HTML, CSS, JavaScript, data, images, and downloads directly.

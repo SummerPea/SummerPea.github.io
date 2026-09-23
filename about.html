@@ -1,95 +1,66 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More About Me</title>
+    <meta name="description" content="Learn more about Haolin Zhang and the creative work behind this portfolio.">
+    <title>About Haolin Zhang</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <nav class="navbar" aria-label="Primary navigation">
         <div class="nav-container">
-            <ul class="nav-links">
+            <a class="site-name" href="index.html">Haolin Zhang</a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span
+                    class="menu-icon" aria-hidden="true">☰</span><span>Menu</span></button>
+            <ul class="nav-links" id="primary-navigation">
                 <li><a href="index.html" class="nav-link">Home</a></li>
-                <li class="dropdown">
-                    <a href="#" class="nav-link dropdown-toggle">My Works</a>
-                    <div class="dropdown-menu">
-                        <a href="novels.html" class="dropdown-item">Novels</a>
-                        <a href="games.html" class="dropdown-item">Games</a>
-                        <a href="apps.html" class="dropdown-item">Apps</a>
-                    </div>
+                <li class="dropdown"><button class="nav-link dropdown-toggle" type="button" aria-expanded="false"
+                        aria-controls="works-menu" aria-haspopup="true">My Works <span aria-hidden="true">▾</span></button>
+                    <div class="dropdown-menu" id="works-menu"><a href="works.html" class="dropdown-item">All Works</a><a href="novels.html" class="dropdown-item">Novels</a><a href="games.html" class="dropdown-item">Games</a><a href="apps.html" class="dropdown-item">Apps</a><a href="music.html" class="dropdown-item">Music</a></div>
                 </li>
-                <li><a href="about.html" class="nav-link active">More About Me</a></li>
+                <li><a href="about.html" class="nav-link active" aria-current="page">More About Me</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- About Me Content -->
-    <section id="about">
-        <div class="about-container">
-            <h1>More About Me</h1>
-            
-            <!-- Background Section -->
-            <h2>Background</h2>
-            <p>I grew up in [Your City/Country], where my curiosity for [your interest, e.g., technology, literature] began at a young age. I studied [your field, e.g., Computer Science, Creative Writing] at [Your School/University] and have since been working on [your profession or projects, e.g., developing apps, writing novels].</p>
-            <hr class="section-divider">
+    <main id="main-content">
+        <section id="about" aria-labelledby="about-title">
+            <div class="about-container">
+                <p class="eyebrow">About the creator</p>
+                <h1 id="about-title">More About Me</h1>
+                <div class="about-section">
+                    <h2>Background</h2>
+                    <p>I am Haolin Zhang, a student interested in creative writing and digital projects. I use this
+                        portfolio to collect the novels, games, and other experiments I am working on.</p>
+                </div>
+                <div class="about-section">
+                    <h2>What I enjoy making</h2>
+                    <p>I like combining stories and technology: writing fictional worlds, exploring game ideas, and
+                        learning through small apps and experiments. Each project is a chance to practice a different
+                        part of the creative process.</p>
+                </div>
+                <div class="about-section">
+                    <h2>Goals</h2>
+                    <p>My goal is to finish and share more complete works while documenting how they develop. This
+                        website will grow as new projects become ready to publish.</p>
+                </div>
+                <div class="about-section">
+                    <h2>Contact</h2>
+                    <p>This portfolio is the best place to follow my public work for now. A public contact or social
+                        link will be added here when there is a channel I can maintain reliably.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-            <!-- Hobbies Section -->
-            <h2>Hobbies</h2>
-            <p>In my free time, I enjoy [your hobbies, e.g., hiking, reading sci-fi novels, playing video games]. These activities inspire my creative work and keep me balanced. I also love experimenting with [another hobby, e.g., cooking new recipes or learning new programming languages].</p>
-            <hr class="section-divider">
-
-            <!-- Goals Section -->
-            <h2>Goals</h2>
-            <p>My aspirations include [your goals, e.g., publishing a novel series, building a groundbreaking app, or teaching others about my craft]. I'm constantly learning and striving to make a positive impact through my work.</p>
-            <hr class="section-divider">
-
-            <!-- Contact Section -->
-            <h2>Contact Me</h2>
-            <p>Feel free to reach out to me at [your email, e.g., email@example.com] or follow me on [your social media, e.g., X @YourHandle] to stay updated on my projects!</p>
-        </div>
-    </section>
-
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year">2026</span> Haolin Zhang. Work in progress.</p>
+    </footer>
     <script src="script.js"></script>
 </body>
+
 </html>
