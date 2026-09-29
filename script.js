@@ -152,12 +152,12 @@ function gameDemoMarkup(project) {
     if (project.demo.type === 'chess') {
         return `<section class="game-demo chess-demo" data-demo-type="chess" aria-labelledby="game-demo-title">
         <div class="game-demo-heading"><div><p class="eyebrow">Playable browser game</p><h2 id="game-demo-title">${escapeHtml(project.demo.title)}</h2></div><span class="demo-badge">Prototype</span></div>
-        <p class="game-help" id="game-help">You play blue from the bottom. Each turn creates one coin on an empty square. Move a piece onto a coin to collect it, or spend saved coins to deploy a new piece. Checkmate wins. Pawns deploy on your second rank and promote to queens; castling is unavailable in this variant.</p>
+        <p class="game-help" id="game-help">You play blue from the bottom. Each turn creates one coin on an empty square. Move onto a coin or deploy a piece there to collect it. Checkmate wins. Pawns deploy on your second rank and promote to queens; castling is unavailable in this variant.</p>
         <div class="chess-scores" aria-label="Game resources"><span>Computer <strong id="chess-cpu-coins">0</strong> coins</span><strong id="chess-turn">Your turn</strong><span>You <strong id="chess-human-coins">0</strong> coins</span></div>
         <div class="chess-board" id="chess-board" role="group" aria-label="Sparkling Chess board" aria-describedby="game-help"></div>
         <div class="chess-deploy" role="group" aria-label="Deploy a piece"><span>Deploy:</span><button type="button" data-chess-deploy="p">Pawn · 1</button><button type="button" data-chess-deploy="n">Knight · 3</button><button type="button" data-chess-deploy="b">Bishop · 3</button><button type="button" data-chess-deploy="r">Rook · 5</button><button type="button" data-chess-deploy="q">Queen · 9</button></div>
         <div class="chess-footer"><p class="game-status" id="chess-status" aria-live="polite">Your turn. Select your king or move toward a coin.</p><button type="button" id="chess-restart">New game</button></div>
-        <p class="chess-legend"><span class="chess-legend-piece">K</span> Your pieces <span class="chess-legend-piece cpu">K</span> Computer pieces <span class="chess-legend-coin">✦</span> Coins</p>
+        <p class="chess-legend"><span class="chess-legend-piece human" aria-hidden="true">♔</span> Your pieces <span class="chess-legend-piece cpu" aria-hidden="true">♚</span> Computer pieces <span class="chess-legend-coin" aria-hidden="true">✦</span> Coins</p>
     </section>`;
     }
 

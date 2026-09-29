@@ -151,6 +151,7 @@
         if (action.kind === 'deploy') {
             next.board[action.to] = { side, type: action.type, moved: false };
             next.bank[side] -= COST[action.type];
+            if (next.coins.delete(action.to)) next.bank[side] += 1;
         } else {
             const piece = state.board[action.from];
             next.board[action.from] = null;

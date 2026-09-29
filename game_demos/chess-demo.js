@@ -2,7 +2,10 @@
     'use strict';
 
     const NAME = { k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn' };
-    const LABEL = { k: 'K', q: 'Q', r: 'R', b: 'B', n: 'N', p: 'P' };
+    const ICON = {
+        human: { k: '♔', q: '♕', r: '♖', b: '♗', n: '♘', p: '♙' },
+        cpu: { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' }
+    };
     const coordinate = (square) => 'abcdefgh'[square % 8] + (8 - Math.floor(square / 8));
 
     window.setupChessDemo = function setupChessDemo(demo) {
@@ -50,7 +53,7 @@
                 if (previous) classes.push('previous');
                 if (checked) classes.push('checked');
                 const contents = piece
-                    ? `<span class="chess-piece ${piece.side}" aria-hidden="true">${LABEL[piece.type]}</span>${coin ? '<span class="chess-coin under-piece" aria-hidden="true">✦</span>' : ''}`
+                    ? `<span class="chess-piece ${piece.side}" aria-hidden="true">${ICON[piece.side][piece.type]}</span>${coin ? '<span class="chess-coin under-piece" aria-hidden="true">✦</span>' : ''}`
                     : coin ? '<span class="chess-coin" aria-hidden="true">✦</span>' : '';
                 const occupant = piece ? `${piece.side === 'human' ? 'your' : 'computer'} ${NAME[piece.type]}${coin ? ', coin underneath' : ''}` : coin ? 'coin' : 'empty';
                 const hint = targets.has(square) ? ', legal target' : '';

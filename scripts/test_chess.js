@@ -44,7 +44,8 @@ assert.equal(hasAction(chess.legalActions(deploy), 'deploy', at('a', 2), null, '
 assert.equal(hasAction(chess.legalActions(deploy), 'deploy', at('a', 3), null, 'p'), false);
 const deployed = chess.applyAction(deploy, { kind: 'deploy', type: 'p', to: at('a', 2) }, () => 0, false);
 assert.equal(deployed.bank.human, 0);
-assert.equal(deployed.coins.has(at('a', 2)), true, 'deployment cannot collect a coin');
+assert.equal(deployed.bank.human, 1, 'a coin under the deployed piece is collected after paying its cost');
+assert.equal(deployed.coins.has(at('a', 2)), false, 'deployment collects the coin on the target square');
 
 const checked = position();
 piece(checked, 'human', 'k', 'e', 1);
