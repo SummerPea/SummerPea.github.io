@@ -21,7 +21,12 @@ Run the dependency-free site validator before publishing:
 ```powershell
 python scripts/validate_site.py
 node --check script.js
+node --check game_demos/soccer-demo.js
+node --check game_demos/sprint-and-sparkle-demo.js
+node --check game_demos/chess-engine.js
+node --check game_demos/chess-demo.js
 node --check data/projects.js
+node scripts/test_chess.js
 ```
 
 The same checks run automatically in GitHub Actions for pushes and pull requests through `.github/workflows/validate.yml`.
@@ -37,10 +42,16 @@ The same checks run automatically in GitHub Actions for pushes and pull requests
 ├── apps.html                  App category page
 ├── music.html                 Music category page
 ├── project.html               Reusable project detail page
+├── feed.xml                   Atom feed for new work updates
 ├── about.html                 About page
 ├── 404.html                   GitHub Pages not-found page
 ├── styles.css                 Shared site styles
 ├── script.js                  Shared behavior and rendering
+├── game_demos/                Browser game engines
+│   ├── soccer-demo.js          Sparkling Soccer game engine
+│   ├── sprint-and-sparkle-demo.js  Sprint & Sparkle game engine
+│   ├── chess-engine.js         Sparkling Chess rules and computer opponent
+│   └── chess-demo.js           Sparkling Chess board and controls
 ├── data/projects.js           Single source of truth for project metadata
 ├── images/                    Profile and future project images
 ├── downloads/                 Files visitors can download, grouped by type
@@ -53,14 +64,18 @@ The same checks run automatically in GitHub Actions for pushes and pull requests
 1. Add a new object to `data/projects.js`.
 2. Give it a unique `id`, title, type, category, genre, status, year, description, and details.
 3. Add a `download` object only when a real file exists under `downloads/`. Keep the path relative to the repository root.
-4. Set `featured: true` only for projects that should appear on the home page.
-5. Run the validation commands and check the project detail page locally.
+4. Add an `audio` object for songs or soundtracks that should have an embedded player. Include `src`, `mime`, `label`, and `note`.
+5. Add a `demo` object only when the project has a self-contained browser demo. The current supported demo types are `dodger`, `soccer`, and `chess`.
+6. Set `featured: true` only for projects that should appear on the home page.
+7. Run the validation commands and check the project detail page locally.
+
+When a project is newly released or receives a meaningful public update, add an `<entry>` to `feed.xml` with a unique id, title, publication date, update date, and project link. Keep the newest entry at the top and update the feed-level `<updated>` timestamp.
 
 The available categories are `novels`, `games`, `apps`, `music`, and `other`. The category value determines which category page displays the project.
 
 ## Downloads
 
-The files currently in `downloads/` are 0 KB examples for testing links and download behavior. Replace them with real files before presenting a project as released. Keep large files organized in the existing category folders and use descriptive filenames.
+Some files in `downloads/` are 0 KB examples for testing links and download behavior; `The Dew.ogg` is a real audio file. Replace placeholder files before presenting their projects as released. Keep large files organized in the existing category folders and use descriptive filenames.
 
 ## GitHub Pages
 

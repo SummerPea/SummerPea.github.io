@@ -32,4 +32,9 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check script.js
+          node --check game_demos/soccer-demo.js
+          node --check game_demos/sprint-and-sparkle-demo.js
+          node --check game_demos/chess-engine.js
+          node --check game_demos/chess-demo.js
+          node scripts/test_chess.js
           node --check data/projects.js

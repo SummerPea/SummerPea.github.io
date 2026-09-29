@@ -130,11 +130,11 @@ This milestone creates a trustworthy foundation. New creative categories, richer
 ## Long-term ideas
 
 - A unified “Works” index with filters by medium, genre, and status.
-- Embedded audio players for songs and soundtracks.
-- Browser-playable game demos where practical.
+- ~~Embedded audio players for songs and soundtracks.~~ Implemented with the shared `audio` project metadata field and HTML audio controls.
+- ~~Browser-playable game demos where practical.~~ Implemented with the Sprint & Sparkle and Sparkling Soccer browser demos; additional games can add a supported `demo` configuration when ready.
 - A changelog or development journal for works in progress.
 - Versioned downloads with release notes.
-- RSS or Atom feed for new work updates.
+- ~~Atom feed for new work updates.~~ Implemented in `feed.xml`; add a new Atom `<entry>` whenever a public work is released or meaningfully updated.
 - Optional dark mode that preserves readable contrast.
 - Analytics that respect visitor privacy, if visitor statistics become useful.
 

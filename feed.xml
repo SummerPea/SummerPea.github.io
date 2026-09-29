@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Haolin Zhang — New Work Updates</title>
+    <subtitle>New novels, games, music, apps, and other creative work by Haolin Zhang.</subtitle>
+    <id>https://summerpea.github.io/feed.xml</id>
+    <updated>2026-09-29T00:00:00+09:00</updated>
+    <link rel="self" type="application/atom+xml" href="https://summerpea.github.io/feed.xml" />
+    <link rel="alternate" type="text/html" href="https://summerpea.github.io/" />
+    <author><name>Haolin Zhang</name></author>
+
+    <entry>
+        <title>Sparkling Chess</title>
+        <id>https://summerpea.github.io/project.html?id=sparkling-chess</id>
+        <updated>2026-09-29T00:00:00+09:00</updated>
+        <published>2026-09-29T00:00:00+09:00</published>
+        <link rel="alternate" type="text/html" href="https://summerpea.github.io/project.html?id=sparkling-chess&amp;from=games" />
+        <category term="games" label="Game" />
+        <summary>Play Sparkling Chess, a coin-powered chess variation, against the computer in your browser.</summary>
+        <author><name>Haolin Zhang</name></author>
+    </entry>
+
+    <entry>
+        <title>The Dew</title>
+        <id>https://summerpea.github.io/project.html?id=the-dew</id>
+        <updated>2026-09-24T00:00:00+09:00</updated>
+        <published>2026-09-24T00:00:00+09:00</published>
+        <link rel="alternate" type="text/html" href="https://summerpea.github.io/project.html?id=the-dew&amp;from=music" />
+        <category term="music" label="Music" />
+        <summary>An original song now available to listen to on Haolin Zhang's portfolio.</summary>
+        <author><name>Haolin Zhang</name></author>
+    </entry>
+</feed>
