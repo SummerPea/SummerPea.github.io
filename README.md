@@ -25,6 +25,8 @@ node --check game_demos/soccer-demo.js
 node --check game_demos/sprint-and-sparkle-demo.js
 node --check game_demos/chess-engine.js
 node --check game_demos/chess-demo.js
+node --check scripts/generate_demo_auth.js
+node --check data/demo-auth.js
 node --check data/projects.js
 node scripts/test_chess.js
 ```
@@ -53,6 +55,7 @@ The same checks run automatically in GitHub Actions for pushes and pull requests
 │   ├── chess-engine.js         Sparkling Chess rules and computer opponent
 │   └── chess-demo.js           Sparkling Chess board and controls
 ├── data/projects.js           Single source of truth for project metadata
+├── data/demo-auth.js          Public salted password verifier for demo access
 ├── images/                    Profile and future project images
 ├── downloads/                 Files visitors can download, grouped by type
 ├── scripts/                   Local maintenance and validation scripts
@@ -68,6 +71,12 @@ The same checks run automatically in GitHub Actions for pushes and pull requests
 5. Add a `demo` object only when the project has a self-contained browser demo. The current supported demo types are `dodger`, `soccer`, and `chess`.
 6. Set `featured: true` only for projects that should appear on the home page.
 7. Run the validation commands and check the project detail page locally.
+
+## Browser demo password
+
+Set `DEMO_PASSWORD` in the local `.env` file. After changing it, regenerate `data/demo-auth.js` with `node scripts/generate_demo_auth.js`, then commit the generated verifier and push the site. `.env` is ignored by Git and must never be committed. Visitors enter the shared password on a project page; a successful unlock lasts for the current browser session.
+
+GitHub Pages is static hosting, so it cannot keep a password secret on a server. The generated file contains a salted PBKDF2 verifier rather than the password, but visitors can still attempt offline guesses against it. Use a long, random password and treat this as a casual access gate, not protection for private or sensitive work.
 
 When a project is newly released or receives a meaningful public update, add an `<entry>` to `feed.xml` with a unique id, title, publication date, update date, and project link. Keep the newest entry at the top and update the feed-level `<updated>` timestamp.
 

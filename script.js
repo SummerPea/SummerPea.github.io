@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFeaturedProjects();
     renderProjectListing();
     renderProjectDetail();
+    setupDemoProtection();
     setupGameDemo();
 });
 
@@ -182,6 +183,87 @@ function gameDemoMarkup(project) {
     </section>`;
 }
 
+function setupDemoProtection() {
+    const gate = document.querySelector('[data-demo-access]');
+    const destination = document.querySelector('[data-protected-demo]');
+    const template = document.querySelector('[data-protected-demo-template]');
+    if (!gate || !destination || !template) return;
+
+    const storageKey = 'portfolio-demo-unlocked';
+    const form = gate.querySelector('form');
+    const passwordInput = gate.querySelector('input[type="password"]');
+    const submitButton = gate.querySelector('button[type="submit"]');
+    const message = gate.querySelector('[data-demo-access-message]');
+    const verifier = window.DEMO_PASSWORD_VERIFIER;
+
+    function activateDemos() {
+        destination.replaceChildren(template.content.cloneNode(true));
+        destination.hidden = false;
+        gate.hidden = true;
+        template.remove();
+        setupGameDemo();
+    }
+
+    try {
+        if (window.sessionStorage.getItem(storageKey) === 'unlocked') {
+            activateDemos();
+            return;
+        }
+    } catch {
+        // A visitor can still unlock demos for this page when storage is disabled.
+    }
+
+    if (!form || !passwordInput || !submitButton || !message) return;
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!verifier || !window.crypto?.subtle) {
+            message.textContent = 'The password checker could not load. Reload the page and try again.';
+            return;
+        }
+
+        submitButton.disabled = true;
+        message.textContent = 'Checking password…';
+        try {
+            const bytesFromHex = (hex) => new Uint8Array(hex.match(/.{1,2}/g).map((byte) => Number.parseInt(byte, 16)));
+            const key = await window.crypto.subtle.importKey(
+                'raw',
+                new TextEncoder().encode(passwordInput.value),
+                'PBKDF2',
+                false,
+                ['deriveBits']
+            );
+            const derived = await window.crypto.subtle.deriveBits({
+                name: 'PBKDF2',
+                salt: bytesFromHex(verifier.salt),
+                iterations: verifier.iterations,
+                hash: verifier.algorithm
+            }, key, 256);
+            const actual = [...new Uint8Array(derived)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+            let difference = actual.length ^ verifier.hash.length;
+            for (let index = 0; index < Math.min(actual.length, verifier.hash.length); index += 1) {
+                difference |= actual.charCodeAt(index) ^ verifier.hash.charCodeAt(index);
+            }
+
+            if (difference === 0) {
+                try {
+                    window.sessionStorage.setItem(storageKey, 'unlocked');
+                } catch {
+                    // Keep the current page unlocked even if the browser blocks storage.
+                }
+                message.textContent = 'Password accepted. Loading demos…';
+                activateDemos();
+                return;
+            }
+            passwordInput.value = '';
+            message.textContent = 'That password did not match. Try again.';
+        } catch {
+            message.textContent = 'Password check failed. Reload the page and try again.';
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+}
+
 function projectCard(project, sourcePage = 'works') {
     const download = project.download
         ? `<a class="card-link" href="${escapeHtml(project.download.href)}" download>${escapeHtml(project.download.label)}</a>`
@@ -279,7 +361,10 @@ function renderProjectDetail() {
     const returnPage = returnPages[sourcePage] || returnPages[fallbackPage];
     const backHref = returnPage.href;
     const backLabel = returnPage.label;
-    detail.innerHTML = `<a class="back-link" href="${backHref}">← Back to ${backLabel}</a><div class="detail-hero"><span class="project-icon large-icon" aria-hidden="true">${projectIcon(project)}</span><div><p class="eyebrow">${escapeHtml(project.type)} · ${escapeHtml(project.year)}</p><h1>${escapeHtml(project.title)}</h1><div class="project-tags"><span>${escapeHtml(project.status)}</span><span>${escapeHtml(project.genre)}</span></div></div></div><div class="detail-copy"><h2>About this project</h2><p>${escapeHtml(project.details)}</p>${gameDemoMarkup(project)}${audioPlayer(project)}${download}</div>`;
+    const demoAccess = project.demo
+        ? `<section class="demo-access" data-demo-access aria-labelledby="demo-access-title"><p class="eyebrow">Password required</p><h2 id="demo-access-title">Unlock browser demos</h2><p>Enter the password shared with you by the site owner to play this demo.</p><form><label for="demo-access-password">Demo password</label><input id="demo-access-password" type="password" autocomplete="current-password" required><button class="primary-btn" type="submit">Unlock demo</button><p class="demo-access-message" data-demo-access-message aria-live="polite"></p></form></section><div data-protected-demo hidden></div><template data-protected-demo-template>${gameDemoMarkup(project)}</template>`
+        : '';
+    detail.innerHTML = `<a class="back-link" href="${backHref}">← Back to ${backLabel}</a><div class="detail-hero"><span class="project-icon large-icon" aria-hidden="true">${projectIcon(project)}</span><div><p class="eyebrow">${escapeHtml(project.type)} · ${escapeHtml(project.year)}</p><h1>${escapeHtml(project.title)}</h1><div class="project-tags"><span>${escapeHtml(project.status)}</span><span>${escapeHtml(project.genre)}</span></div></div></div><div class="detail-copy"><h2>About this project</h2><p>${escapeHtml(project.details)}</p>${demoAccess}${audioPlayer(project)}${download}</div>`;
     document.title = `${project.title} | Haolin Zhang`;
 }
 
